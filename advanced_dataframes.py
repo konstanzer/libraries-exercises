@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 """
 Run python -m pip install mysqlclient pymysql from your terminal to install pymysql and the mysqlclient.
 Create a notebook or python script named advanced_dataframes to do your work in for these exercises.
@@ -13,22 +15,28 @@ How many unique titles are in the titles DataFrame?
 What is the oldest date in the to_date column?
 What is the most recent date in the to_date column?
 """
+from env import host, username, password
+
+def get_db_url(username, host, password, db):
+    # a typo produced 'NoSuchModuleError: Can't load plugin'
+    return f'mysql+pymysql://{username}:{password}@{host}/{db}'
 
 
-# Create the users DataFrame.
-users = pd.DataFrame({
-    'id': [1, 2, 3, 4, 5, 6],
-    'name': ['bob', 'joe', 'sally', 'adam', 'jane', 'mike'],
-    'role_id': [1, 2, 3, 3, np.nan, np.nan]
-})
-users
+if __name__ == '__main__':
 
-# Create the roles DataFrame
-roles = pd.DataFrame({
-    'id': [1, 2, 3, 4],
-    'name': ['admin', 'author', 'reviewer', 'commenter']
-})
-roles
+    url = get_db_url(username, host, password, 'employees')
+    
+    # a typo produced: 'ProgrammingError: "Table doesn't exist"'
+    #emps = pd.read_sql('SELECT * FROM employees', url)
+    tits = pd.read_sql('SELECT * FROM titles', url)
+    
+    print(tits.info()) # 443,308 x 4
+    #print(emps.info()) # 300,024 x 6 #dunno, guess it's right
+
+    print(len(set(tits.title))) #7
+    # 1985-03-01 to 9999-01-01
+    print(np.min(tits.to_date))
+    print(np.max(tits.to_date))
 
 """
 Copy the users and roles DataFrames from the examples above.
@@ -48,6 +56,22 @@ Create a new column on the mpg dataset named is_automatic that holds boolean val
 Using the mpg dataset, find out which which manufacturer has the best miles per gallon on average?
 Do automatic or manual cars have better miles per gallon?
 """
+# Create the users DataFrame.
+users = pd.DataFrame({
+    'id': [1, 2, 3, 4, 5, 6],
+    'name': ['bob', 'joe', 'sally', 'adam', 'jane', 'mike'],
+    'role_id': [1, 2, 3, 3, np.nan, np.nan]
+})
+users
+
+# Create the roles DataFrame
+roles = pd.DataFrame({
+    'id': [1, 2, 3, 4],
+    'name': ['admin', 'author', 'reviewer', 'commenter']
+})
+roles
+
+
 
 """
 Use your get_db_url function to help you explore the data from the chipotle database.

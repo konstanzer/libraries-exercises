@@ -73,7 +73,7 @@ How many animals are hoppers that are above the median speed? What percentage is
 #3
 mam = data('mammals')
 #print(mam.info()) #2 float cols x 62 rows
-print(mam.head())
+print(mam.tail()) #no speed in this one!
 
 
 
