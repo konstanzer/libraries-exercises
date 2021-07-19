@@ -17,53 +17,54 @@ Write the code to get only the string values containing the substring "berry".
 Write the code to get only the string values containing the substring "apple".
 Which string value contains the most vowels?
 """
-"""
 print(fruits.index)
 print(fruits.values)
-"""
 #shows unique (7-10)
 print(fruits.value_counts())
 #shows total
 print(fruits.describe())
-"""
 print(fruits.dtypes)
 print(fruits[-3:])
-"""
+
 #random fruits
 print([fruits[i] for i in np.random.choice(fruits.index, 2)])
 
+#vectorized string operations
+#with the .str attribute, we can apply a string method
+#to each string value in a Series
 fruits.str.capitalize()
 fruits.str.count('a')
-
-#vowels
-vcount = lambda s: sum([s.count(v) for v in 'aeiou'])
-vs = vcount(fruits.str)
-
 max(fruits.str.len())
 fruits[fruits.str.len() > 4]
 
-#oos
+#more than an o
 ohs = lambda s: s.count('o') > 1
 print(fruits[fruits.apply(ohs)])
 
-#berry/apple substring
-regex = re.compile('.*berry.*')
-lst = [s for s in fruits.values if re.match(regex, s)]
-print(lst)
-regex = re.compile('.*apple.*')
-lst = [s for s in fruits.values if re.match(regex, s)]
-print(lst)
+#berry/apple substrings
+match = lambda r: [s for s in fruits.values if re.match(r, s)]
+print(match(re.compile('.*apple.*')))
+print(match(re.compile('.*berry.*')))
 
-#voweliest
-print(fruits[np.argmax(vs)])
-print("\n")
+print('\n\n')
 
-"""I'm not analyzing a random string of letters
+#sum of vowels for each string
+vowel_counts = fruits.str.count('[aeiou]')
+
+print('\nfruit with most vowels is ' +
+#argmax returns the index of the max value
+		str(fruits[np.argmax(vowel_counts)]))
+
+
+##################
+
+
 s = 'hnvidduckkqxwymbimkccexbkmqygkxoyndmcxnwqarhyf\
 	fsjpsrabtjzsypmzadfavyrnndndvswreauxovncxtwzpwej\
 	ilzjrmmbbgbyxvjtewqthafnbkqplarokkyydtubbmnexoypu\
 	lzwfhqvckdpqtpoppzqrmcvhhpwgjwupgzhiofohawytlsiyec\
 	uproguy'
+"""
 Which letter occurs the most frequently in the letters Series?
 Which letter occurs the Least frequently?
 How many vowels are in the Series?
@@ -71,6 +72,7 @@ How many consonants are in the Series?
 Create a Series that has all of the same letters but uppercased.
 Create a bar plot of the frequencies of the 6 most commonly occuring letters.
 """
+print("\n\n")
 
 n = pd.Series(['$796,459.41', '$278.60', '$482,571.67', '$4,503,915.98',
 	'$2,121,418.3', '$1,260,813.3', '$87,231.01', '$1,509,175.45',
@@ -95,6 +97,15 @@ n = n.apply(clean)
 print(n)
 
 #binning
+print("\nBetter binning")
+bins = n.value_counts(bins=4)
+print(bins.index,bins.values)
+#bar plot
+n.value_counts(bins=4).plot.barh()
+#INVERT
+plt.gca().invert_yaxis()
+
+#ugly...
 bins = 4
 bin_size = int(max(n)/bins)+1
 lst = []
