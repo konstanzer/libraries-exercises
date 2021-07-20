@@ -30,7 +30,6 @@ df = pd.DataFrame({'name': students,
 df['passing_english'] = df['english'] > 65
 df = df.sort_values(by=['passing_english','english'])
 df['overall_grade'] = (df.english+df.math+df.reading) /3
-#print(df)
 
 """
 Load the mpg dataset. Read the documentation for the dataset and use it for the following questions:
