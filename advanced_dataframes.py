@@ -76,28 +76,44 @@ For each title, find the hire date of the employee that was hired most recently 
 Create a cross tabulation of the number of titles by department. (Hint: this will involve a combination of SQL code.) ??
 """
 
+query = """
+        SELECT title, max(from_date) most_recent_hire
+        FROM employees
+        JOIN titles USING(emp_no)
+        GROUP BY title;
+        """
+
+query2 = """
+        SELECT title, dept_name
+        FROM employees
+        JOIN titles USING(emp_no)
+        JOIN dept_emp USING(emp_no)
+        JOIN departments USING(dept_no);
+        """
+
 if __name__ == '__main__':
     
     url = get_db_url(username, host, password, 'employees')
-    
+
     # a typo produced: 'ProgrammingError: "Table doesn't exist"'
-    emps = pd.read_sql('SELECT * FROM employees', url)
-    tits = pd.read_sql('SELECT * FROM titles', url)
+    #emps = pd.read_sql('SELECT * FROM employees', url)
+    #tits = pd.read_sql('SELECT * FROM titles', url)
     
-    print(tits.info()) # 443,308 x 4
-    print(emps.info()) # 300,024 x 6 #dunno, guess it's right
+    #print(tits.info()) # 443,308 x 4
+    #print(emps.info()) # 300,024 x 6 #dunno, guess it's right
     
     #print(len(set(tits.title))) #7
     # 1985-03-01 to 9999-01-01
     #print(np.min(tits.to_date))
     #print(np.max(tits.to_date))
-
-    df = emps.merge(tits, on='emp_no', how='left')
-    print(df.head())
-    df.groupby('title')
+    #df = emps.merge(tits, on='emp_no', how='left')
 
 
-    """
+    df = pd.read_sql(query, url)
+    print(df)
+    df = pd.read_sql(query2, url)
+    print(pd.crosstab(df.title, df.dept_name))
+
     print(len(mpg.model.unique()), len(mpg.manufacturer.unique())) #38 + 15
     print(mpg[mpg.automatic==True].mileage_avg.mean(),
         mpg[mpg.automatic==False].mileage_avg.mean())
@@ -119,5 +135,4 @@ if __name__ == '__main__':
     #top grossing items
     print(orders[['item_name','total']].groupby('item_name').agg('sum').\
         sort_values(by='total', ascending=False).head())
-    """
 
