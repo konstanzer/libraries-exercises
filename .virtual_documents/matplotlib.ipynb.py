@@ -45,10 +45,6 @@ plt.show()
 
 fig, ax = plt.subplots(1,1, figsize=(16,9))
 
-plt.title("Big-O Notation")
-plt.xlabel("Elements")
-plt.ylabel("Operations")
-
 f = lambda x: 0*x + 1
 ax.plot(x, f(x))
 
@@ -67,14 +63,18 @@ ax.plot(x, f(x))
 f = lambda x:  pow(2,x)
 ax.plot(x, f(x))
 
-#f = lambda x: math.factorial(x)
-ax.plot(x, f(x))
+f = lambda x: math.factorial(x//1) #type error
+Y = [math.factorial(X//1) for X in x]
+ax.plot(x, Y)
 
 f = lambda x: pow(x,x)
 ax.plot(x, f(x))
 
 plt.ylim(0,100)
 plt.xlim(0,10)
+plt.title("Big-O Notation")
+plt.xlabel("Elements")
+plt.ylabel("Operations")
 plt.legend(['O(1)', 'O(log n)', 'O(n)', 'O(n log n)',\
             'O(n^2)', 'O(2^n)', 'O(nget_ipython().getoutput(")', 'O(n^n)'])")
 plt.show()
